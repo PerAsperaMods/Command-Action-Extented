@@ -117,8 +117,8 @@ Write-Step "3/3" "Checking Per Aspera SDK..."
 Write-Host ""
 
 $sdkPaths = @(
-    (Join-Path $gamePath "BepInEx\plugins\Common\PerAspera.Core.dll"),
-    (Join-Path $gamePath "BepInEx\plugins\SDK\PerAspera.Core.dll")
+    (Join-Path $gamePath "BepInEx\plugins\SDK\PerAspera.Core.dll"),
+    (Join-Path $gamePath "BepInEx\plugins\Common\PerAspera.Core.dll")
 )
 $sdkFound = $sdkPaths | Where-Object { Test-Path $_ } | Select-Object -First 1
 

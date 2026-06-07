@@ -14,10 +14,10 @@
     <BepInExUnityLibsDir>$(GameDir)\BepInEx\unity-libs</BepInExUnityLibsDir>
 
     <!-- SDK DLLs: auto-detected from BepInEx plugin install.
-         Checks plugins\Common\ first (preferred install location), falls back to plugins\SDK\.
+         Checks plugins\SDK\ first (standard install), falls back to plugins\Common\ (legacy).
          Override SdkDllPath in gamelibs.props if building SDK from source. -->
-    <SdkDllPath Condition="'$(SdkDllPath)' == '' and Exists('$(GameDir)\BepInEx\plugins\Common\PerAspera.Core.dll')">$(GameDir)\BepInEx\plugins\Common</SdkDllPath>
     <SdkDllPath Condition="'$(SdkDllPath)' == '' and Exists('$(GameDir)\BepInEx\plugins\SDK\PerAspera.Core.dll')">$(GameDir)\BepInEx\plugins\SDK</SdkDllPath>
+    <SdkDllPath Condition="'$(SdkDllPath)' == '' and Exists('$(GameDir)\BepInEx\plugins\Common\PerAspera.Core.dll')">$(GameDir)\BepInEx\plugins\Common</SdkDllPath>
 
     <!-- Shared build settings -->
     <TargetFramework>net6.0</TargetFramework>
