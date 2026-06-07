@@ -1,0 +1,31 @@
+<!--
+  Per Aspera — local paths configuration
+  =======================================
+  SETUP (one time):
+    1. Copy this file → gamelibs.props  (same directory)
+    2. Set your game path below
+    3. ⚠️ gamelibs.props is gitignored — never commit it
+
+  PREREQUISITES:
+    ✅ Per Aspera installed via Steam
+    ✅ BepInEx 6 installed (launch the game once to generate interop DLLs)
+    ✅ Per Aspera SDK installed as a BepInEx plugin
+         → SDK DLLs are auto-detected:
+              BepInEx\plugins\Common\   ← checked first (preferred)
+              BepInEx\plugins\SDK\      ← fallback
+
+  OPTIONAL — if you build the SDK from source:
+    Uncomment SdkDllPath and point it to your SDK build output folder.
+    Example: F:\ModPeraspera\SDK\PerAspera.GameAPI.Commands\bin\Release\net6.0
+-->
+<Project>
+  <PropertyGroup>
+
+    <!-- Path to your Per Aspera game installation -->
+    <PerAsperaGamePath>D:\SteamLibrary\steamapps\common\Per Aspera</PerAsperaGamePath>
+
+    <!-- Optional: override SDK DLL location (auto-detected by default) -->
+    <!-- <SdkDllPath>F:\ModPeraspera\SDK\PerAspera.GameAPI.Commands\bin\Release\net6.0</SdkDllPath> -->
+
+  </PropertyGroup>
+</Project>

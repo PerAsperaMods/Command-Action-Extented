@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Custom YAML action: AddResearchPoints
+    Demonstrates the IModTextAction pattern using FactionWrapper (no reflection).
+
+    YAML usage:
+      launchActions:
+        - command: AddResearchPoints
+          arguments: ["500"]
+  -->
+
+  <PropertyGroup>
+    <AssemblyName>PerAspera.Action.AddResearchPoints</AssemblyName>
+    <RootNamespace>PerAspera.Actions.AddResearchPoints</RootNamespace>
+    <BepInExPluginGuid>com.peraspera.actions.addresearchpoints</BepInExPluginGuid>
+    <BepInExPluginName>Action — Add Research Points</BepInExPluginName>
+    <BepInExPluginVersion>1.0.0</BepInExPluginVersion>
+  </PropertyGroup>
+
+  <!-- BepInEx DLLs and SDK DLLs are added automatically by Directory.Build.props -->
+  <ItemGroup>
+    <!-- Source generator only — emits MyPluginInfo.cs with GUID/Name/Version constants -->
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Custom YAML action: AddResource
+    Adds resources directly to the player faction's stockpile using FactionWrapper.
+
+    YAML usage:
+      launchActions:
+        - command: AddResource
+          arguments:
+            - "resource_water"   # resource key
+            - "1000"             # amount
+  -->
+
+  <PropertyGroup>
+    <AssemblyName>PerAspera.Action.AddResource</AssemblyName>
+    <RootNamespace>PerAspera.Actions.AddResource</RootNamespace>
+    <BepInExPluginGuid>com.peraspera.actions.addresource</BepInExPluginGuid>
+    <BepInExPluginName>Action — Add Resource</BepInExPluginName>
+    <BepInExPluginVersion>1.0.0</BepInExPluginVersion>
+  </PropertyGroup>
+
+  <!-- BepInEx DLLs and SDK DLLs are added automatically by Directory.Build.props -->
+  <ItemGroup>
+    <!-- Source generator only — emits MyPluginInfo.cs with GUID/Name/Version constants -->
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" />
+  </ItemGroup>
+
+</Project>

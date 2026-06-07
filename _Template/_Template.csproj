@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    ┌─────────────────────────────────────────────────────────────────────┐
+    │  TEMPLATE — Custom YAML Action                                       │
+    │                                                                       │
+    │  TO USE THIS TEMPLATE:                                                │
+    │  1. Copy this entire folder → rename it (e.g. Actions.SpawnDrone)    │
+    │  2. Rename _Template.csproj → Actions.YourName.csproj                │
+    │  3. Update AssemblyName, RootNamespace, BepInExPlugin* below         │
+    │  4. Rename YourAction.cs and update CommandName + Execute()          │
+    │  5. Add to CommandActions.sln: right-click solution → Add → Project  │
+    └─────────────────────────────────────────────────────────────────────┘
+  -->
+
+  <PropertyGroup>
+    <!-- RENAME THESE -->
+    <AssemblyName>PerAspera.Action.YourActionName</AssemblyName>
+    <RootNamespace>PerAspera.Actions.YourActionName</RootNamespace>
+    <BepInExPluginGuid>com.peraspera.actions.youractionname</BepInExPluginGuid>
+    <BepInExPluginName>Action — Your Action Name</BepInExPluginName>
+    <BepInExPluginVersion>1.0.0</BepInExPluginVersion>
+  </PropertyGroup>
+
+  <!-- BepInEx DLLs and SDK DLLs are added automatically by Directory.Build.props -->
+  <ItemGroup>
+    <!-- Source generator only — emits MyPluginInfo.cs with GUID/Name/Version constants -->
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" />
+  </ItemGroup>
+
+</Project>

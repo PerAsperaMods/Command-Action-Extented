@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Actions.AddResearchPoints/Actions.AddResearchPoints.csproj" />
+  <Project Path="Actions.AddResource/Actions.AddResource.csproj" />
+  <Project Path="_Template/_Template.csproj" />
+</Solution>

@@ -1,0 +1,42 @@
+<Project>
+  <!--
+    Automatically add BepInEx interop DLLs as references.
+    Two-target pattern avoids MSB4120 cross-target item reference issue.
+  -->
+  <Target Name="GatherGameLibDlls"
+          Condition="'$(IsCIBuild)' != 'true' and Exists('$(BepInExInteropDir)')">
+    <ItemGroup>
+      <_GameLibDll Include="$(BepInExInteropDir)\*.dll" />
+      <_GameLibDll Include="$(BepInExUnityLibsDir)\*.dll"
+                   Condition="Exists('$(BepInExUnityLibsDir)')" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="AddGameLibReferences"
+          BeforeTargets="ResolveAssemblyReferences"
+          DependsOnTargets="GatherGameLibDlls"
+          Condition="'$(IsCIBuild)' != 'true' and Exists('$(BepInExInteropDir)')">
+    <ItemGroup>
+      <Reference Include="%(_GameLibDll.Filename)">
+        <HintPath>%(_GameLibDll.FullPath)</HintPath>
+        <Private>false</Private>
+      </Reference>
+    </ItemGroup>
+  </Target>
+
+  <!-- All actions deploy into a single shared folder in BepInEx\plugins.
+       Override ExtendedCommandsPluginDir in gamelibs.props to change the folder name. -->
+  <PropertyGroup>
+    <ExtendedCommandsPluginDir Condition="'$(ExtendedCommandsPluginDir)' == ''">Extended-Commands</ExtendedCommandsPluginDir>
+  </PropertyGroup>
+
+  <Target Name="DeployToGame" AfterTargets="Build"
+          Condition="'$(PerAsperaGamePath)' != '' and '$(PerAsperaGamePath)' != 'GAME_PATH_NOT_SET'">
+    <MakeDir Directories="$(GameDir)\BepInEx\plugins\$(ExtendedCommandsPluginDir)" />
+    <Copy SourceFiles="$(TargetPath)"
+          DestinationFolder="$(GameDir)\BepInEx\plugins\$(ExtendedCommandsPluginDir)"
+          OverwriteReadOnlyFiles="true" />
+    <Message Text="✅ Deployed $(AssemblyName).dll → BepInEx\plugins\$(ExtendedCommandsPluginDir)\"
+             Importance="high" />
+  </Target>
+</Project>

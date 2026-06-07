@@ -1,0 +1,107 @@
+<Project>
+  <!-- Load local path configuration (gitignored — never committed) -->
+  <Import Project="$(MSBuildThisFileDirectory)gamelibs.props"
+          Condition="Exists('$(MSBuildThisFileDirectory)gamelibs.props')" />
+
+  <PropertyGroup>
+    <!-- Game folder: set PerAsperaGamePath in gamelibs.props -->
+    <GameDir Condition="'$(PerAsperaGamePath)' != ''">$(PerAsperaGamePath)</GameDir>
+    <GameDir Condition="'$(GameDir)' == ''">GAME_PATH_NOT_SET — copy gamelibs.props.example to gamelibs.props</GameDir>
+
+    <!-- BepInEx directories (derived from game folder) -->
+    <BepInExCoreDir>$(GameDir)\BepInEx\core</BepInExCoreDir>
+    <BepInExInteropDir>$(GameDir)\BepInEx\interop</BepInExInteropDir>
+    <BepInExUnityLibsDir>$(GameDir)\BepInEx\unity-libs</BepInExUnityLibsDir>
+
+    <!-- SDK DLLs: auto-detected from BepInEx plugin install.
+         Checks plugins\Common\ first (preferred install location), falls back to plugins\SDK\.
+         Override SdkDllPath in gamelibs.props if building SDK from source. -->
+    <SdkDllPath Condition="'$(SdkDllPath)' == '' and Exists('$(GameDir)\BepInEx\plugins\Common\PerAspera.Core.dll')">$(GameDir)\BepInEx\plugins\Common</SdkDllPath>
+    <SdkDllPath Condition="'$(SdkDllPath)' == '' and Exists('$(GameDir)\BepInEx\plugins\SDK\PerAspera.Core.dll')">$(GameDir)\BepInEx\plugins\SDK</SdkDllPath>
+
+    <!-- Shared build settings -->
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <RestoreSources>
+      https://api.nuget.org/v3/index.json;
+      https://nuget.bepinex.dev/v3/index.json
+    </RestoreSources>
+  </PropertyGroup>
+
+  <!--
+    BepInEx core DLLs — referenced directly from the game folder.
+    Using game-folder DLLs (not NuGet) avoids the netstandard2.0/net6.0 type conflict
+    that causes CS0012 when mixing Il2CppInterop NuGet packages with IL2CPP interop DLLs.
+    Private=false: already loaded by BepInEx runtime.
+  -->
+  <ItemGroup Condition="Exists('$(BepInExCoreDir)\BepInEx.Core.dll')">
+    <Reference Include="BepInEx.Core">
+      <HintPath>$(BepInExCoreDir)\BepInEx.Core.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="BepInEx.Unity.IL2CPP">
+      <HintPath>$(BepInExCoreDir)\BepInEx.Unity.IL2CPP.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="BepInEx.Unity.Common">
+      <HintPath>$(BepInExCoreDir)\BepInEx.Unity.Common.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Il2CppInterop.Runtime">
+      <HintPath>$(BepInExCoreDir)\Il2CppInterop.Runtime.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="MonoMod.RuntimeDetour">
+      <HintPath>$(BepInExCoreDir)\MonoMod.RuntimeDetour.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="MonoMod.Utils">
+      <HintPath>$(BepInExCoreDir)\MonoMod.Utils.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="Il2Cppmscorlib">
+      <HintPath>$(BepInExInteropDir)\Il2Cppmscorlib.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!--
+    SDK DLL references — resolved from BepInEx\plugins\SDK\ (where the SDK plugin lives).
+    Private=false: these DLLs are already loaded by BepInEx at runtime, do NOT bundle them.
+  -->
+  <ItemGroup Condition="Exists('$(SdkDllPath)')">
+    <Reference Include="PerAspera.Core">
+      <HintPath>$(SdkDllPath)\PerAspera.Core.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="PerAspera.Core.IL2CppExtensions">
+      <HintPath>$(SdkDllPath)\PerAspera.Core.IL2CppExtensions.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="PerAspera.GameAPI">
+      <HintPath>$(SdkDllPath)\PerAspera.GameAPI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="PerAspera.GameAPI.Events">
+      <HintPath>$(SdkDllPath)\PerAspera.GameAPI.Events.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="PerAspera.GameAPI.Commands">
+      <HintPath>$(SdkDllPath)\PerAspera.GameAPI.Commands.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="PerAspera.GameAPI.Wrappers">
+      <HintPath>$(SdkDllPath)\PerAspera.GameAPI.Wrappers.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Warning if SDK plugin is not installed -->
+  <Target Name="CheckSdkInstalled" BeforeTargets="Build"
+          Condition="!Exists('$(SdkDllPath)\PerAspera.Core.dll')">
+    <Warning Text="SDK not found at '$(SdkDllPath)'. Install the Per Aspera SDK BepInEx plugin first, or set SdkDllPath in gamelibs.props." />
+  </Target>
+</Project>
